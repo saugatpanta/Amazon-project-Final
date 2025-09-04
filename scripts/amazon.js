@@ -1,4 +1,5 @@
-
+import {cart} from '../data/cart.js';
+import { products } from '../data/products.js';
 
 let productsHtml = '';
 
@@ -27,7 +28,7 @@ products.forEach((product) => {
         </div>
 
         <div class="product-quantity-container">
-          <select>
+          <select class = "js-quantity-selector" data-product-id = "${product.id}">
             <option selected value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
@@ -43,12 +44,13 @@ products.forEach((product) => {
 
         <div class="product-spacer"></div>
 
-        <div class="added-to-cart">
+        <div class="added-to-cart js-add-notification" data-product-id = "${product.id}">
           <img src="images/icons/checkmark.png">
           Added
         </div>
 
-        <button class="add-to-cart-button button-primary">
+        <button class="add-to-cart-button button-primary js-add-to-cart " 
+        data-product-id="${product.id}">
           Add to Cart
         </button>
       </div>
@@ -56,3 +58,56 @@ products.forEach((product) => {
 });
 
 document.querySelector('.js-products-grids').innerHTML = productsHtml;
+
+const notificationTimeouts = {};
+
+document.querySelectorAll('.js-add-to-cart').forEach((button) => {
+  button.addEventListener('click', () => {
+    const productId = button.dataset.productId;
+
+    const quantitySelector =  document.querySelector(`.js-quantity-selector[data-product-id="${productId}"]`);
+    
+    const selectQuantity = Number(quantitySelector.value);
+
+    let matchingItem = cart.find(item => item.productId === productId);
+
+    /*cart.forEach((item) => {
+      if (productId === item.productId) {
+        matchingItem = item;
+      }
+    });*/
+
+    if (matchingItem) {
+      matchingItem.quantity += selectQuantity;
+    } else {
+      cart.push({
+      productId,
+      quantity: selectQuantity,
+    })
+    }
+    
+    let cartQuantity = 0;
+
+    cart.forEach((item) => {
+      cartQuantity += item.quantity;
+    })
+
+    document.querySelector('.js-cart-quantity').innerHTML = cartQuantity;
+
+    const notification = document.querySelector(`.js-add-notification[data-product-id="${productId}"]`);
+
+    notification.classList.add('added-visible');
+
+    if (notificationTimeouts[productId]) {
+      clearTimeout(notificationTimeouts[productId]);
+    }
+    
+      notificationTimeouts[productId] = setTimeout(() => {
+        notification.classList.remove('added-visible');
+        delete notificationTimeouts[productId];
+      }, 2000);
+
+
+  })
+});
+

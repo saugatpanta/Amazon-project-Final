@@ -1,4 +1,4 @@
-const products = [
+export const products = [
   {
     id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
     image: "images/products/athletic-cotton-socks-6-pairs.jpg",
@@ -655,6 +655,39 @@ const products = [
       "hoodies",
       "apparel",
       "mens"
+    ]
+  },
+  {
+    id: "e43638ce-689f-4b85-b27f-e1d07eb678c6",
+    image: "images/products/umbrella.jpg",
+    name: "Compact Travel Umbrella - Windproof",
+    rating: {
+      stars: 5,
+      count: 2058
+    },
+    priceCents: 2599,
+    keywords: [
+      "umbrella",
+      "travel",
+      "rain",
+      "accessory"
+    ]
+  }
+,
+  {
+    id: "e43638ce-6aa0-4b85-b27f-74eb678c6f45",
+    image: "images/products/backpack.jpg",
+    name: "Black and Gray Sports Backpack",
+    rating: {
+      stars: 4,
+      count: 82
+    },
+    priceCents: 9080,
+    keywords: [
+      "backpack",
+      "bag",
+      "travel",
+      "sports"
     ]
   }
 ];
