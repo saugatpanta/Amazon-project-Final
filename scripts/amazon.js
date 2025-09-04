@@ -1,5 +1,6 @@
-import {cart} from '../data/cart.js';
-import { products } from '../data/products.js';
+import {cart, addToCart} from '../data/cart.js';
+import {products} from '../data/products.js';
+
 
 let productsHtml = '';
 
@@ -59,41 +60,22 @@ products.forEach((product) => {
 
 document.querySelector('.js-products-grids').innerHTML = productsHtml;
 
-const notificationTimeouts = {};
 
-document.querySelectorAll('.js-add-to-cart').forEach((button) => {
-  button.addEventListener('click', () => {
-    const productId = button.dataset.productId;
-
-    const quantitySelector =  document.querySelector(`.js-quantity-selector[data-product-id="${productId}"]`);
-    
-    const selectQuantity = Number(quantitySelector.value);
-
-    let matchingItem = cart.find(item => item.productId === productId);
-
-    /*cart.forEach((item) => {
-      if (productId === item.productId) {
-        matchingItem = item;
-      }
-    });*/
-
-    if (matchingItem) {
-      matchingItem.quantity += selectQuantity;
-    } else {
-      cart.push({
-      productId,
-      quantity: selectQuantity,
-    })
-    }
-    
-    let cartQuantity = 0;
+//update cart function
+function updateCartQuantity() {
+  let cartQuantity = 0;
 
     cart.forEach((item) => {
       cartQuantity += item.quantity;
     })
 
     document.querySelector('.js-cart-quantity').innerHTML = cartQuantity;
+}
 
+const notificationTimeouts = {};
+
+//update cart function
+function notificationUpdate(productId) {
     const notification = document.querySelector(`.js-add-notification[data-product-id="${productId}"]`);
 
     notification.classList.add('added-visible');
@@ -107,7 +89,21 @@ document.querySelectorAll('.js-add-to-cart').forEach((button) => {
         delete notificationTimeouts[productId];
       }, 2000);
 
+}
 
+
+document.querySelectorAll('.js-add-to-cart').forEach((button) => {
+  button.addEventListener('click', () => {
+    const productId = button.dataset.productId;
+    
+    //for updating the cart
+    addToCart(productId);
+
+    //updates the cart
+    updateCartQuantity()
+
+    //updates the notification of add cart
+    notificationUpdate(productId);
   })
 });
 
