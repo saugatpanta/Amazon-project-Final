@@ -3,7 +3,8 @@ import { getProduct} from '../../data/products.js';
 import { formatCurrency } from '../utils/money.js';
 import { updateCartQuantity } from '../utils/cartQuantity.js';
 import dayjs from 'https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js';
-import {deliveryOptions, getDeliveryOption} from '../../data/deliveryOption.js';
+import { deliveryOptions, getDeliveryOption } from '../../data/deliveryOption.js';
+import {renderPaymentSummary} from './paymentSummary.js'
 
 export function renderOrderSummary() {
 
@@ -129,6 +130,7 @@ export function renderOrderSummary() {
       container.remove();
 
       updateCartQuantity();
+      renderPaymentSummary();
     });
   });
 
@@ -161,7 +163,8 @@ export function renderOrderSummary() {
       
 
       container.classList.remove('is-editing-quantity');
-
+      
+      renderPaymentSummary();
       updateCartQuantity();
     });
   });
@@ -174,6 +177,7 @@ export function renderOrderSummary() {
       
       updateDeliveryOption(productId, deliveryOptionId);
       renderOrderSummary();
+      renderPaymentSummary();
     });
   });
 
