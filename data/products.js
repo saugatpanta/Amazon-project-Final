@@ -50,7 +50,6 @@ class Clotihng extends Product{
   }
 
   extraInfoHtml() {
-    //super.extraInfoHtml();
     return `
       <a href = "${this.sizeChartLink}" target = "_blank">
         Size Chart
@@ -59,29 +58,40 @@ class Clotihng extends Product{
   }
 }
 
-const tshirt = new Clotihng(
-  {
-    id: "83d4ca15-0f35-48f5-b7a3-1ea210004f2e",
-    image: "images/products/adults-plain-cotton-tshirt-2-pack-teal.jpg",
-    name: "Adults Plain Cotton T-Shirt - 2 Pack",
-    rating: {
-      stars: 4.5,
-      count: 56
-    },
-    priceCents: 799,
-    keywords: [
-      "tshirts",
-      "apparel",
-      "mens"
-    ],
-    type: "clothing",
-    sizeChartLink: "images/clothing-size-chart.png"
-  }
-);
-
-console.log(tshirt);
+// const date = new Date();
+// console.log(date.toLocaleTimeString());
 
 
+console.log(this); //undefined
+
+
+/*
+const obj2 = {
+  a: 2,
+  b: this.a
+};
+
+*/
+
+
+// function logThis() {
+//   console.log(this);
+// }
+
+// logThis();
+
+// logThis.call('Hello');
+
+// this;
+// const obj3 = {
+//   method: () => {
+//     console.log(this);
+//   }
+// };
+
+// obj3.method();
+
+/*
 export const products = [
   {
     id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
@@ -779,4 +789,28 @@ export const products = [
     return new Clotihng(productDetails);
   }
   return new Product(productDetails);
-});
+}); 
+*/
+
+
+export let products = [];
+
+export function loadProducts(fun) {
+  const xhr = new XMLHttpRequest();
+
+  xhr.addEventListener('load', () => {
+    products = JSON.parse(xhr.response).map((productDetails) => {
+      if (productDetails.type === 'clothing') {
+        return new Clotihng(productDetails);
+      }
+      return new Product(productDetails);
+    });;
+
+    console.log('Load products');
+
+    fun();
+  });
+
+  xhr.open('GET', 'https://supersimplebackend.dev/products');
+  xhr.send();
+}
